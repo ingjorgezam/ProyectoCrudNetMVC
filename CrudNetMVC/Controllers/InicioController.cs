@@ -32,6 +32,60 @@ namespace CrudNetMVC.Controllers
 			return View();
 		}
 
+		[HttpGet]
+		public IActionResult Editar(int? id)
+		{
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var contacto = _contexto.Contacto.Find(id);
+
+            if (contacto == null)
+            {
+                return NotFound();
+            }
+
+			return View(contacto);
+		}
+
+		[HttpGet]
+		public IActionResult Detalle(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var contacto = _contexto.Contacto.Find(id);
+
+			if (contacto == null)
+			{
+				return NotFound();
+			}
+
+			return View(contacto);
+		}
+
+		[HttpGet]
+		public IActionResult Borrar(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var contacto = _contexto.Contacto.Find(id);
+
+			if (contacto == null)
+			{
+				return NotFound();
+			}
+
+			return View(contacto);
+		}
+
 		[HttpPost]
         [ValidateAntiForgeryToken]
 		public async Task<IActionResult> Crear(Contacto contacto)
@@ -48,6 +102,38 @@ namespace CrudNetMVC.Controllers
 			}
 
 			return View();
+
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Editar(Contacto contacto)
+		{
+			if (ModelState.IsValid)
+			{
+                _contexto.Contacto.Update(contacto);
+				await _contexto.SaveChangesAsync();
+				return RedirectToAction(nameof(Index));
+
+			}
+
+			return View();
+
+		}
+
+		[HttpPost, ActionName("Borrar")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> BorrarContacto(int? id)
+		{
+			var contacto = await _contexto.Contacto.FindAsync(id);
+			if (contacto == null)
+			{
+				return View();
+			}
+
+			_contexto.Contacto.Remove(contacto);
+			await _contexto.SaveChangesAsync();
+			return RedirectToAction(nameof(Index));
 
 		}
 
